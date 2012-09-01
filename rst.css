@@ -1,0 +1,65 @@
+html
+{
+	background: #f8f8f8;
+}
+
+body
+{
+	background: #fff;
+	color: #000;
+
+	margin: auto;
+	padding: 2em;
+	max-width: 52em;
+}
+
+p, li, dd
+{
+	text-align: justify;
+	line-height: 1.5;
+}
+
+dt
+{
+	font-weight: bold;
+	margin-top: 1em;
+}
+
+dd p
+{
+	margin-top: 0;
+}
+
+h1.title
+{
+	text-align: center;
+
+	margin: 1em 0;
+}
+
+.docinfo
+{
+	margin: 4em 3em 2em;
+}
+
+.docinfo-name
+{
+	text-align: left;
+	padding-right: 1em;
+}
+
+.footnote td
+{
+	padding-bottom: .5em;
+}
+
+.footnote .label
+{
+	padding-right: 1em;
+}
+
+pre.literal-block
+{
+	margin-top: -1em; /* work-around leading newline */
+	margin-left: 2em;
+}
