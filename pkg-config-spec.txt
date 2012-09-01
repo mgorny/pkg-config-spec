@@ -245,10 +245,10 @@ to pkg-config form package lists. A package list is formed using
 the following syntax::
 
 	package-list = *WSP *( package-spec *( package-sep ) )
-	package-sep  = WSP | ","
+	package-sep  = WSP / ","
 
 	package-spec = package-name [ ver-op package-version ]
-	ver-op       = "<" | "<=" | "=" | "!=" | ">=" | ">"
+	ver-op       = "<" / "<=" / "=" / "!=" / ">=" / ">"
 
 If `ver-op` and `package-version` are specified, only packages
 satisfying the specified version requirement will match. Otherwise,
