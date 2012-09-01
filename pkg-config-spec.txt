@@ -147,6 +147,11 @@ as of version 0.27:
 ``Version``
 	Package version.
 
+	There are no direct requirements on version string format; however,
+	their use in `package lists`_ disallow use of whitespace, ``<``,
+	``>``, ``=`` and ``!`` characters. Additionally, it is important
+	to consider `version comparison`_ rules.
+
 ``URL``
 	Package homepage URL.
 
@@ -174,6 +179,8 @@ as of version 0.27:
 	of the current package. Additionally, if static linking is used
 	the same applies to `Libs`.
 
+	The syntax for `Requires` value is detailed in `Package lists`_.
+
 ``Requires.private``
 	Private package dependencies. The packages mentioned there will be
 	appended to the effective `Requires` list if static linking is used.
@@ -183,6 +190,8 @@ as of version 0.27:
 	there is used by the application, the current package can not be
 	used.
 
+	The syntax for `Conflicts` value is detailed in `Package lists`_.
+
 
 Keyword value interpretation
 ============================
@@ -190,7 +199,7 @@ Keyword value interpretation
 Cflags
 ------
 
-The `Cflags` variable contains compiler flags, in a form suitable
+The `Cflags` keyword contains compiler flags, in a form suitable
 for passing to a POSIX shell (excluding the shell expansions). When
 parsing the variable, pkg-config uses shell quoting rules to split it
 into consecutive command-line arguments.
@@ -205,10 +214,11 @@ groups:
        option with its argument to ensure that multiple occurences
        of it aren't collapsed.
 
+
 Libs
 ----
 
-The `Libs` variable contains compiler linking flags, in a form suitable
+The `Libs` keyword contains compiler linking flags, in a form suitable
 for passing to a POSIX shell (excluding the shell expansions). When
 parsing the variable, pkg-config uses shell quoting rules to split it
 into consecutive command-line arguments.
@@ -225,5 +235,37 @@ groups:
 .. [6] pkg-config additionally concatenates the MacOS X ``-framework``
        option with its argument to ensure that multiple occurences
        of ``-framework`` aren't collapsed.
+
+
+Package lists
+-------------
+
+The `Requires` and `Conflicts` keywords, and also command-line arguments
+to pkg-config form package lists. A package list is formed using
+the following syntax::
+
+	package-list = *WSP *( package-spec *( package-sep ) )
+	package-sep  = WSP | ","
+
+	package-spec = package-name [ ver-op package-version ]
+	ver-op       = "<" | "<=" | "=" | "!=" | ">=" | ">"
+
+If `ver-op` and `package-version` are specified, only packages
+satisfying the specified version requirement will match. Otherwise,
+any package with matching `package-name` will match.
+
+The rules for version matching are detailed in `Version comparison`_.
+
+
+Version comparison
+------------------
+
+pkg-config version comparison rules follow those established
+for the RPM_ package manager.
+
+.. XXX
+
+.. _RPM: http://www.rpm.org/
+
 
 .. vim:se ft=rst tw=72 noet spell :
