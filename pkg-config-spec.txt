@@ -6,7 +6,7 @@ pkg-config specification
 
 
 Introduction
-------------
+============
 
 pkg-config is a helper tool for obtaining correct compiler & linker
 flags suitable to satisfying application dependencies. It was designed
@@ -50,4 +50,134 @@ create or improve their own pkg-config implementation.
 .. _`man page`: http://linux.die.net/man/1/pkg-config
 .. _Guide: http://people.freedesktop.org/~dbn/pkg-config-guide.html
 
-.. vim:ft=rst:tw=72:noet:spell
+
+The package file format
+=======================
+
+The packages in pkg-config are specified inside files called `package
+files`. These files have an obligatory ``.pc`` suffix, and are line-
+oriented text files.
+
+
+Data encoding
+-------------
+
+The consecutive lines are delimited using any of the following
+characters::
+
+	line-delim = LF / CR / CR LF / LF CR
+
+Each line has the following form::
+
+	line = line-data *( escaped-delim line-data ) [ "#" comment ]
+	escaped-delim = "\" ( line-delim / "#" )
+
+The following should be noted:
+
+1. The ``#`` character indicates start of a comment, except when
+   preceded by a backslash (``\``). When preceded by a backslash,
+   it is interpreted as a literal ``#``.
+2. When not in a comment, the line delimiter can be escaped through
+   preceding with a backslash (``\``). In that case, the consecutive
+   lines are concatenated.
+3. The comments always end at the end-of-a-line.
+4. Any other occurrence of a backslash (``\``) is interpreted
+   as a literal backslash.
+
+The interpreted line data is created through concatenating
+the consecutive line data and escaped delimiters up to the first
+non-escaped ``#``, line delimiter or end-of-file. Comments
+are discarded.
+
+
+Data format
+-----------
+
+Each interpreted data line follows the following format::
+
+	data-line  = empty-line / keyword / variable
+
+	empty-line = *WSP
+	keyword    = *WSP tag *WSP ":" *WSP value *WSP
+	variable   = *WSP tag *WSP "=" *WSP value *WSP
+
+	tag        = 1*( ALPHA / DIGIT / "_" / "." )
+	value      = *( value-data / esc-var / var-ref )
+	esc-var    = "$$"
+	var-ref    = "${" tag "}"
+
+The `variable` syntax defines a variable with a name defined by `tag`.
+The variable definition becomes effective (i.e. can be referenced)
+starting with the following line. If a variable is declared multiple
+times, the next declaration replaces the previous value [3]_
+and a warning is printed.
+
+The `keyword` syntax defines a keyword with a name defined by `tag`.
+The list of allowed names and their meaning is described in Keywords_.
+If a keyword uses a name unknown to the particular pkg-config version,
+a warning is printed. If a keyword is declared multiple times, the next
+declaration replaces the previous value and a warning is printed.
+
+For both variable and keyword definition values, variable substitution
+is performed. All occurrences of `var-ref` are substituted with
+the current, effective value of a variable named by `tag`. In order to
+prevent the variable substitution, the ``$`` character can be escaped by
+repeating it twice; all occurrences of ``$$`` (`esc-var`) will be
+substituted with a single ``$``.
+
+.. [3] Note that the new value is effective starting with the next line,
+       thus the old value will still be used for previous lines
+       and the variable declaration itself.
+
+
+Keywords
+--------
+
+The following list describes all the keywords interpreted by pkg-config
+as of version 0.27:
+
+``Name``
+	Free-form package name. Please note that the name specified here is
+	intended for display only; the package is always identified
+	in pkg-config by its filename.
+
+``Description``
+	Free-form package description.
+
+``Version``
+	Package version.
+
+``URL``
+	Package homepage URL.
+
+``Cflags`` or ``CFlags``
+	Required compiler flags. These flags are always used.
+
+``Libs``
+	Dependant libraries, and required compiler linking flags. These
+	flags are always used when a package is requested directly; they
+	are also used when the package is a requisite for another package
+	and static linking is used.
+
+``Libs.private``
+	Private dependant libraries. The flags listed there will be appended
+	to the value of `Libs` if static linking is used.
+
+``Requires``
+	Public package dependencies. All packages mentioned there will be
+	required for the package check to succeed, and the effective
+	`Cflags` for each of them will be appended to the effective `Cflags`
+	of the current package. Additionally, if static linking is used
+	the same applies to `Libs`.
+
+``Requires.private``
+	Private package dependencies. The packages mentioned there will be
+	appended to the effective `Requires` list if static linking is used.
+
+``Conflicts``
+	The list of conflicting packages. If any of the packages mentioned
+	there is used by the application, the current package can not be
+	used.
+
+
+.. vim:se ft=rst tw=72 noet spell :
