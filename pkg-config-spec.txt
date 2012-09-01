@@ -26,7 +26,7 @@ caused a number of alternative implementations to arose. Amongst them
 there were the `OpenBSD implementation`_ in Perl, and pkgconf_
 in ANSI C. The work on those implementations and the experience in using
 them has shown that pkg-config lacks proper documentation. The only
-official documentation on it are the `man page`_ and a short tutorial-
+official documentation on it are the `man page`_ and a short tutorial-\
 style Guide_.
 
 Thus, I have decided to write a complete and detailed specification of
@@ -55,7 +55,7 @@ The package file format
 =======================
 
 The packages in pkg-config are specified inside files called `package
-files`. These files have an obligatory ``.pc`` suffix, and are line-
+files`. These files have an obligatory ``.pc`` suffix, and are line-\
 oriented text files.
 
 
@@ -263,7 +263,38 @@ Version comparison
 pkg-config version comparison rules follow those established
 for the RPM_ package manager.
 
-.. XXX
+As seen by the comparison algorithm, the versions could be described
+using the following syntax::
+
+	version-string = 1*( alpha-seg / numeric-seg / version-sep )
+	alpha-seg      = 1*( ALPHA )
+	numeric-seg    = 1*( DIGIT )
+
+For the comparison, the version number is split into alphabetic
+(`alpha-seg`) and/or numeric segments (`numeric-seg`), either
+alternating or separated by non-alphanumeric characters.
+
+Afterwards, for each corresponding segment of the two version numbers,
+the following algorithm is repeated until either one of the segments is
+indicated newer or the end of either version string is reached:
+
+1. If both compared segments are numeric, the segment with larger
+   integer value is considered newer [7]_.
+2. If both compared segments are alphabetic, a semi-lexical (ASCII
+   code) comparison is applied (using ``strcmp()``).
+3. If the compared segments are of different type (one numeric
+   and the other alphabetic), the version with numeric segment
+   is considered newer.
+
+If all version components from both strings are used without finding
+a segment indicating that one of the versions is newer, the versions
+are considered equal. If all version components from one of the strings
+are used while the other has more components, the latter is considered
+newer.
+
+.. [7] Note that the version numbers can be arbitrarily large. For that
+       reason, the comparison used in pkg-config uses semi-lexical
+       comparison of normalized numeric strings.
 
 .. _RPM: http://www.rpm.org/
 
