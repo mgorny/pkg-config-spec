@@ -153,11 +153,15 @@ as of version 0.27:
 ``Cflags`` or ``CFlags``
 	Required compiler flags. These flags are always used.
 
+	The syntax for `Cflags` value is detailed in Cflags_.
+
 ``Libs``
 	Dependant libraries, and required compiler linking flags. These
 	flags are always used when a package is requested directly; they
 	are also used when the package is a requisite for another package
 	and static linking is used.
+
+	The syntax for `Libs` value is detailed in Libs_.
 
 ``Libs.private``
 	Private dependant libraries. The flags listed there will be appended
@@ -179,5 +183,47 @@ as of version 0.27:
 	there is used by the application, the current package can not be
 	used.
 
+
+Keyword value interpretation
+============================
+
+Cflags
+------
+
+The `Cflags` variable contains compiler flags, in a form suitable
+for passing to a POSIX shell (excluding the shell expansions). When
+parsing the variable, pkg-config uses shell quoting rules to split it
+into consecutive command-line arguments.
+
+The flags encountered in `Cflags` are grouped into the two following
+groups:
+
+1. the ``-I`` (include path) flags,
+2. other flags [4]_.
+
+.. [4] pkg-config additionally concatenates the ``-idirafter``
+       option with its argument to ensure that multiple occurences
+       of it aren't collapsed.
+
+Libs
+----
+
+The `Libs` variable contains compiler linking flags, in a form suitable
+for passing to a POSIX shell (excluding the shell expansions). When
+parsing the variable, pkg-config uses shell quoting rules to split it
+into consecutive command-line arguments.
+
+The flags encountered in `Libs` are grouped into the three following
+groups:
+
+1. the ``-l`` (library name) flags [5]_,
+2. the ``-L`` (library path) flags,
+3. other flags [6]_.
+
+.. [5] pkg-config additionally ensures not to put C# ``-lib:`` to that
+       group.
+.. [6] pkg-config additionally concatenates the MacOS X ``-framework``
+       option with its argument to ensure that multiple occurences
+       of ``-framework`` aren't collapsed.
 
 .. vim:se ft=rst tw=72 noet spell :
