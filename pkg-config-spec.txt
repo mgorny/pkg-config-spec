@@ -1,0 +1,53 @@
+========================
+pkg-config specification
+========================
+:Author: Michał Górny <mgorny@gentoo.org>
+:Copyright: http://creativecommons.org/licenses/by/3.0/
+
+
+Introduction
+------------
+
+pkg-config is a helper tool for obtaining correct compiler & linker
+flags suitable to satisfying application dependencies. It was designed
+to be platform- and language-agnostic, and to support installing
+dependencies in any locations without the need for explicitly specifying
+those locations every time an application is built.
+
+Sadly, the official pkg-config_ implementation had a few deficiencies.
+Most importantly, the upstream decided to use the glib_ and popt_
+libraries. The latter being redundant and having portability problems,
+the former being quite large and causing circular dependencies (since
+glib's build required pkg-config itself), they limited the popularity
+and usefulness of pkg-config [1]_.
+
+The fore-mentioned deficiencies of the official implementation has
+caused a number of alternative implementations to arose. Amongst them
+there were the `OpenBSD implementation`_ in Perl, and pkgconf_
+in ANSI C. The work on those implementations and the experience in using
+them has shown that pkg-config lacks proper documentation. The only
+official documentation on it are the `man page`_ and a short tutorial-
+style Guide_.
+
+Thus, I have decided to write a complete and detailed specification of
+how pkg-config works based on the experiences with implementing
+pkgconf [2]_. The goal is to provide a complete, well-organized guide
+which would prove useful both to end-users, and to people trying to
+create or improve their own pkg-config implementation.
+
+.. [1] The redundant popt dependency has been finally removed lately,
+       and the necessary glib parts started to be bundled along with
+       pkg-config in order to simplify bootstrap.
+.. [2] Please note that I am *not* the author of pkgconf. William
+       Pitcock is.
+
+.. _pkg-config: http://www.freedesktop.org/wiki/Software/pkg-config
+.. _glib: http://developer.gnome.org/glib/
+.. _popt: http://rpm5.org/files/popt/
+.. _`OpenBSD implementation`:
+	http://www.openbsd.org/cgi-bin/cvsweb/src/usr.bin/pkg-config/
+.. _pkgconf: https://github.com/pkgconf/pkgconf
+.. _`man page`: http://linux.die.net/man/1/pkg-config
+.. _Guide: http://people.freedesktop.org/~dbn/pkg-config-guide.html
+
+.. vim:ft=rst:tw=72:noet:spell
