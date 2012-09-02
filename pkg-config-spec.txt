@@ -115,8 +115,9 @@ and a warning is printed.
 The `keyword` syntax defines a keyword with a name defined by `tag`.
 The list of allowed names and their meaning is described in Keywords_.
 If a keyword uses a name unknown to the particular pkg-config version,
-a warning is printed. If a keyword is declared multiple times, the next
-declaration replaces the previous value and a warning is printed.
+it is silently ignored. If a keyword is declared multiple times,
+the next declaration replaces the previous value and a warning
+is printed.
 
 For both variable and keyword definition values, variable substitution
 is performed. All occurrences of `var-ref` are substituted with
