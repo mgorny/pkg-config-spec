@@ -140,7 +140,7 @@ as of version 0.27:
 ``Name``
 	Free-form package name. Please note that the name specified here is
 	intended for display only; the package is always identified
-	in pkg-config by its filename. *Obligatory*.
+	in pkg-config by the `package key`_. *Obligatory*.
 
 ``Description``
 	Free-form package description. *Obligatory*.
@@ -149,7 +149,7 @@ as of version 0.27:
 	Package version. *Obligatory*.
 
 	There are no direct requirements on version string format; however,
-	their use in `package lists`_ disallow use of whitespace, ``<``,
+	their use in a `package list`_ disallow use of whitespace, ``<``,
 	``>``, ``=`` and ``!`` characters. Additionally, it is important
 	to consider `version comparison`_ rules.
 
@@ -185,7 +185,8 @@ as of version 0.27:
 	of the current package. Additionally, if the library format does not
 	express inter-library dependencies, the same applies to `Libs`.
 
-	The syntax for `Requires` value is detailed in `Package lists`_.
+	The syntax for `Requires` value is detailed in the `package list`_
+	description.
 
 ``Requires.private``
 	Private package dependencies. The packages mentioned there will be
@@ -197,7 +198,8 @@ as of version 0.27:
 	there is used by the application, the current package can not be
 	used.
 
-	The syntax for `Conflicts` value is detailed in `Package lists`_.
+	The syntax for `Conflicts` value is detailed in the `package list`_
+	description.
 
 If any of the keywords marked as *obligatory* is not specified
 by the particular package, it is considered ill-formed and pkg-config
@@ -206,6 +208,14 @@ exits with an error if it is requested (either directly or indirectly).
 
 Keyword value interpretation
 ============================
+
+Package key
+-----------
+
+Every package is identified in pkg-config by a unique package key.
+The key is created from the package filename, after stripping
+the ``.pc`` suffix, and then an optional ``-uninstalled`` suffix.
+
 
 Cflags
 ------
@@ -248,8 +258,8 @@ groups:
        of ``-framework`` aren't collapsed.
 
 
-Package lists
--------------
+Package list
+------------
 
 The `Requires` and `Conflicts` keywords, and also command-line arguments
 to pkg-config form package lists. A package list is formed using
@@ -258,12 +268,12 @@ the following syntax::
 	package-list = *WSP *( package-spec *( package-sep ) )
 	package-sep  = WSP / ","
 
-	package-spec = package-name [ ver-op package-version ]
+	package-spec = package-key [ ver-op package-version ]
 	ver-op       = "<" / "<=" / "=" / "!=" / ">=" / ">"
 
 If `ver-op` and `package-version` are specified, only packages
 satisfying the specified version requirement will match. Otherwise,
-any package with matching `package-name` will match.
+any package with matching `package-key` will match.
 
 The rules for version matching are detailed in `Version comparison`_.
 
@@ -313,21 +323,21 @@ newer.
 Package file lookup
 ===================
 
-Whenever a package is requested by `package lists`_, the following
+Whenever a package is requested by a `package list`_, the following
 algorithm is used to find the requested package:
 
-1. If the `package-name` ends with a ``.pc`` suffix, it is interpreted
+1. If the `package-key` ends with a ``.pc`` suffix, it is interpreted
    as an absolute path to the package file and that file is used.
    If the file is not readable or does not exist, the package is
    considered not found.
-2. If the `package-name` does not end with an ``-uninstalled`` suffix
+2. If the `package-key` does not end with an ``-uninstalled`` suffix
    and uninstalled package versions are preferred (the default),
-   the mentioned suffix is temporarily appended to the package name
+   the mentioned suffix is temporarily appended to the package key
    and a `package search`_ is performed with that name. If it succeeds,
    the package found is returned.
-3. A `package search`_ is performed using the given package name. If it
+3. A `package search`_ is performed using the given package key. If it
    succeeds, the package found is returned.
-4. If the `package-name` is ``pkg-config``, a virtual package
+4. If the `package-key` is ``pkg-config``, a virtual package
    for pkg-config is returned. The package specifies at least
    a `Version` keyword matching a pkg-config version [8]_,
    and a `pc_path` variable expressing the default package search paths.
@@ -348,11 +358,77 @@ Package search
 --------------
 
 Whenever a package search is performed for a package, the ``.pc`` suffix
-is appended to the `package-name` and a search for a regular file
+is appended to the `package-key` and a search for a regular file
 (or a symbolic link to a regular file) with a matching name is performed
 in package search paths. If a particular package is found in multiple
 directories, the one found in earlier directory is used (even if it has
 an older version than the other).
+
+
+Command-line interface
+======================
+
+pkg-config provides a public command line interface through
+the ``pkg-config`` executable. The executable accepts GNU-style long
+options and an arbitrary number of positional parameters. Those
+parameters are concatenated, forming a requested `package list`_.
+
+
+The exclusive commands
+----------------------
+
+The options listed in this section fully influence the operation mode
+of pkg-config. If any of them is specified, pkg-config performs
+the appropriate operation and exits. If more than one is specified,
+the one coming earlier in this list is respected and the other options
+are ignored.
+
+``--version``
+	Outputs the pkg-config version and exits with `0` status.
+
+``--atleast-pkgconfig-version=VERSION``
+	Checks whether pkg-config version is at least `VERSION`. Exits with
+	`0` status if it is, or `1` if it is older.
+
+	The version is compared using package `version comparison`_ rules.
+
+``--list-all``
+	Prints a list containing all packages found in `package search`_
+	paths.
+
+	For each found package (with an unique `package key`_),
+	the following is printed::
+
+		output = package-key *WSP name SP "-" SP description
+
+	The `name` and `description` fields correspond to the appropriate
+	package keywords. No line wrapping is performed. If multiple
+	packages with the same key are found, the one occurring
+	in the earlier `package search`_ directory is used.
+
+	Afterwards, pkg-config exits with `0` status.
+
+``--print-variables``
+	Prints a list of all variables declared in the specified package.
+	The list contains variable names, one per line. If more than one
+	package is specified, the package list is iterated in the reverse
+	order (i.e. variables for the last package come first) and an empty
+	line is used to separate output for the consecutive packages.
+
+	After using this option, pkg-config continues execution. However, if
+	the ``--exists`` option is specified as well, it exits after
+	performing the check appropriate for that option.
+
+``--exists``
+	Checks silently whether all specified packages (with matching
+	versions) are available. Exits with `0` status if they are,
+	with `1` otherwise.
+
+``--uninstalled``
+	Check whether the package list contains at least one uninstalled
+	package (having ``-uninstalled`` suffix in the matching filename),
+	and exit with `0` status if it does. Exits with `1` status
+	otherwise.
 
 
 .. vim:se ft=rst tw=72 noet spell :
