@@ -30,16 +30,14 @@ official documentation on it are the `man page`_ and a short tutorial-\
 style Guide_.
 
 Thus, I have decided to write a complete and detailed specification of
-how pkg-config works based on the experiences with implementing
-pkgconf [2]_. The goal is to provide a complete, well-organized guide
-which would prove useful both to end-users, and to people trying to
-create or improve their own pkg-config implementation.
+how pkg-config works based on the actual source code. The goal is to
+provide a complete, well-organized guide which would prove useful both
+to end-users, and to people trying to create or improve their own
+pkg-config implementation.
 
 .. [1] The redundant popt dependency has been finally removed lately,
        and the necessary glib parts started to be bundled along with
        pkg-config in order to simplify bootstrap.
-.. [2] Please note that I am *not* the author of pkgconf. William
-       Pitcock is.
 
 .. _pkg-config: http://www.freedesktop.org/wiki/Software/pkg-config
 .. _glib: http://developer.gnome.org/glib/
