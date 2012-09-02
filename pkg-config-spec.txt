@@ -140,13 +140,13 @@ as of version 0.27:
 ``Name``
 	Free-form package name. Please note that the name specified here is
 	intended for display only; the package is always identified
-	in pkg-config by its filename.
+	in pkg-config by its filename. *Obligatory*.
 
 ``Description``
-	Free-form package description.
+	Free-form package description. *Obligatory*.
 
 ``Version``
-	Package version.
+	Package version. *Obligatory*.
 
 	There are no direct requirements on version string format; however,
 	their use in `package lists`_ disallow use of whitespace, ``<``,
@@ -155,6 +155,10 @@ as of version 0.27:
 
 ``URL``
 	Package homepage URL.
+
+	The URL listed here is used to recommend a download location for new
+	versions of package whenever a newer version than installed is
+	requested.
 
 ``Cflags`` or ``CFlags``
 	Required compiler flags. These flags are always used.
@@ -194,6 +198,10 @@ as of version 0.27:
 	used.
 
 	The syntax for `Conflicts` value is detailed in `Package lists`_.
+
+If any of the keywords marked as *obligatory* is not specified
+by the particular package, it is considered ill-formed and pkg-config
+exits with an error if it is requested (either directly or indirectly).
 
 
 Keyword value interpretation
@@ -300,6 +308,51 @@ newer.
        comparison of normalized numeric strings.
 
 .. _RPM: http://www.rpm.org/
+
+
+Package file lookup
+===================
+
+Whenever a package is requested by `package lists`_, the following
+algorithm is used to find the requested package:
+
+1. If the `package-name` ends with a ``.pc`` suffix, it is interpreted
+   as an absolute path to the package file and that file is used.
+   If the file is not readable or does not exist, the package is
+   considered not found.
+2. If the `package-name` does not end with an ``-uninstalled`` suffix
+   and uninstalled package versions are preferred (the default),
+   the mentioned suffix is temporarily appended to the package name
+   and a `package search`_ is performed with that name. If it succeeds,
+   the package found is returned.
+3. A `package search`_ is performed using the given package name. If it
+   succeeds, the package found is returned.
+4. If the `package-name` is ``pkg-config``, a virtual package
+   for pkg-config is returned. The package specifies at least
+   a `Version` keyword matching a pkg-config version [8]_,
+   and a `pc_path` variable expressing the default package search paths.
+
+.. [8] Please note that a particular consumer may require a specific
+       pkg-config version. For that reason, it is recommended to use
+       version numbers matching upstream versions; an implementation
+       following this specification should use the version ``0.27``.
+
+       If the implementor wishes to append a program-specific version,
+       it is recommended to use an alphabetic version separator,
+       e.g. ``0.27/pkgconf-0.8.7``. This ensures that the particular
+       version is always considered older than the next upstream
+       version (see: `Version comparison`_).
+
+
+Package search
+--------------
+
+Whenever a package search is performed for a package, the ``.pc`` suffix
+is appended to the `package-name` and a search for a regular file
+(or a symbolic link to a regular file) with a matching name is performed
+in package search paths. If a particular package is found in multiple
+directories, the one found in earlier directory is used (even if it has
+an older version than the other).
 
 
 .. vim:se ft=rst tw=72 noet spell :
