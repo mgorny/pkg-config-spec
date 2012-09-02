@@ -114,5 +114,8 @@ table.footnote td
 
 pre.literal-block
 {
-	margin-left: 2em;
+	padding: .8em .4em;
+
+	border-left: 2em solid #ddf;
+	background: #eef;
 }
