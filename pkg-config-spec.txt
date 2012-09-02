@@ -129,11 +129,36 @@ substituted with a single ``$``.
 Please note that aside to the package-defined variables, additional
 (global) variables can be either defined by user (using
 ``--define-variable``, see: `Other program options`_) or by pkg-config
-itself (see: `Environment variables`_).
+itself (see: `Special variables`_).
 
 .. [3] Note that the new value is effective starting with the next line,
        thus the old value will still be used for previous lines
        and the variable declaration itself.
+
+
+Special variables
+-----------------
+
+A few variables in pkg-config files have special meaning. Some of them
+are declared either by pkg-config or the user (using `environment
+variables`_).
+
+``pc_sysrootdir``
+	Set through the ``PKG_CONFIG_SYSROOT_DIR`` environment variable;
+	if unset, defaults to ``/``.
+
+	The path specified by this variable is automatically prepended to
+	the include and library paths in `-I` (Cflags_) and `-L` (Libs_)
+	flags.
+
+``pc_top_builddir``
+	Set through the ``PKG_CONFIG_TOP_BUILD_DIR`` environment variable;
+	if unset, defaults to literal ``$(top_builddir)`` (for Makefile).
+
+	The value of this variable may be used by package files to refer to
+	the top build directory of the current project.
+
+.. XXX: prefix on win32
 
 
 Keywords
@@ -388,6 +413,8 @@ subdirectories of ``--libdir`` (``lib``) and ``--datarootdir``
 (``share``). On win32, it defaults to the ``lib/pkgconfig``
 and ``share/pkgconfig`` subdirectories of the program directory
 (the directory with pkg-config executable).
+
+.. XXX: registry on win32
 
 
 Command-line interface
