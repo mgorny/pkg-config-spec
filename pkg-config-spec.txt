@@ -126,6 +126,11 @@ prevent the variable substitution, the ``$`` character can be escaped by
 repeating it twice; all occurrences of ``$$`` (`esc-var`) will be
 substituted with a single ``$``.
 
+Please note that aside to the package-defined variables, additional
+(global) variables can be either defined by user (using
+``--define-variable``, see: `Other program options`_) or by pkg-config
+itself (see: `Environment variables`_).
+
 .. [3] Note that the new value is effective starting with the next line,
        thus the old value will still be used for previous lines
        and the variable declaration itself.
@@ -231,6 +236,10 @@ groups:
 1. the ``-I`` (include path) flags,
 2. other flags [4]_.
 
+Please note that if ``pc_sysrootdir`` variable is defined (see:
+`Environment variables`_), its value will be prepended to the include
+paths (in ``-I`` flags).
+
 .. [4] pkg-config additionally concatenates the ``-idirafter``
        option with its argument to ensure that multiple occurences
        of it aren't collapsed.
@@ -250,6 +259,10 @@ groups:
 1. the ``-l`` (library name) flags [5]_,
 2. the ``-L`` (library path) flags,
 3. other flags [6]_.
+
+Please note that if ``pc_sysrootdir`` variable is defined (see:
+`Environment variables`_), its value will be prepended to the library
+paths (in ``-L`` flags)..
 
 .. [5] pkg-config additionally ensures not to put C# ``-lib:`` to that
        group.
@@ -363,6 +376,18 @@ is appended to the `package-key` and a search for a regular file
 in package search paths. If a particular package is found in multiple
 directories, the one found in earlier directory is used (even if it has
 an older version than the other).
+
+The search path is created through concatenating the list of directories
+specified as ``PKG_CONFIG_PATH`` (if there is one) with either
+``PKG_CONFIG_LIBDIR`` or the default search path (see: `Environment
+variables`_).
+
+The default search path is platform-dependant. On POSIX platforms,
+it is defined when building, and it defaults to the ``pkgconfig``
+subdirectories of ``--libdir`` (``lib``) and ``--datarootdir``
+(``share``). On win32, it defaults to the ``lib/pkgconfig``
+and ``share/pkgconfig`` subdirectories of the program directory
+(the directory with pkg-config executable).
 
 
 Command-line interface
@@ -558,6 +583,54 @@ The options in this group affect the behavior of most of the commands.
 ``--errors-to-stdout``
 	Output the errors (from ``--print-errors``) on the stdout
 	instead of stderr.
+
+
+Environment variables
+---------------------
+
+Aside to the program options, a few environment variables influence
+the behavior of pkg-config as well.
+
+``PKG_CONFIG_PATH``
+	A list of directories prepended to the `package search`_ path
+	(either the default one or defined by ``PKG_CONFIG_LIBDIR``).
+
+	The directories use platform convention for path lists; they are
+	colon-separated on POSIX and semicolon-separated on win32.
+
+``PKG_CONFIG_LIBDIR``
+	A list of directories replacing the default `package search`_ path.
+	``PKG_CONFIG_PATH`` will still be honored.
+
+	The directories use platform convention for path lists; they are
+	colon-separated on POSIX and semicolon-separated on win32.
+
+``PKG_CONFIG_DISABLE_UNINSTALLED``
+	If this environment variable is set, then uninstalled packages are
+	no longer preferred when performing the `package file lookup`_.
+
+``PKG_CONFIG_ALLOW_SYSTEM_CFLAGS``
+	Disable stripping of standard include directories from `Cflags`_.
+
+``PKG_CONFIG_ALLOW_SYSTEM_LIBS``
+	Disable stripping of standard library directories from `Libs`_.
+
+.. XXX: ^ describe how pkg-config strips them
+
+``PKG_CONFIG_SYSROOT_DIR``
+	The value for global ``pc_sysrootdir`` variable. If unset,
+	defaults to ``/``.
+
+	If set, the value of this variable will be automatically prepended
+	to all ``-L`` and ``-I`` flags. It can be used when building
+	in an alternate root.
+
+``PKG_CONFIG_TOP_BUILD_DIR``
+	The value for global ``pc_top_builddir`` variable. If unset,
+	defaults to ``$(top_builddir)``.
+
+	This variable can be used within pkg-config files to refer
+	to the top build directory. It is not used internally.
 
 
 .. vim:se ft=rst tw=72 noet spell :
