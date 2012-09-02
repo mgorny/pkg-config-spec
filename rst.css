@@ -25,7 +25,7 @@ dt
 	margin-top: 1em;
 }
 
-dd p
+dd p, .footnote p
 {
 	margin-top: 0;
 }
@@ -66,9 +66,14 @@ h1.title
 	padding-right: 1em;
 }
 
-.footnote td
+.footnote
 {
-	padding-bottom: .5em;
+	margin-top: 2em;
+}
+
+.footnote + .footnote
+{
+	margin-top: .5em;
 }
 
 .footnote .label
