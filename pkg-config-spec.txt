@@ -356,6 +356,36 @@ newer.
 .. _RPM: http://www.rpm.org/
 
 
+Version comparison example
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following table lists a number of version strings, sorted using
+the version comparison rules. Next to the strings, the interpreted
+components are shown and the components directly responsible for
+the particular version being newer are emphasized.
+
+
+= ================ ======================
+?  Version string    Version components
+= ================ ======================
+. 0                0
+< 0.0              0 **0**
+< 0.37             0 **37**
+< 0.37.1           0 37 **1**
+= 0.37-1           0 37 1
+< 0.37-1b          0 37 1 **b**
+= 0.37.1.b         0 37 1 b
+< 0.37.1.0         0 37 1 **0**
+= 0.037.001.000    0 37 1 0
+< 0.37.4a          0 37 **4** a
+< 0.37.4b          0 37 4 **b**
+< 0.37.4b-pkgconf1 0 37 4 b **pkgconf** 1
+< 0.37.4c          0 37 4 **c**
+= !!0@@37##4$$c    0 37 4 c
+= ================ ======================
+
+
+
 Package file lookup
 ===================
 

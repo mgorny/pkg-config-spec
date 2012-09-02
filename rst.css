@@ -46,6 +46,28 @@ h2
 	margin-bottom: .5em;
 }
 
+table.docutils
+{
+	margin: 1em auto;
+	width: 80%;
+	border: none;
+	border-top: 0.2em solid #339;
+	border-bottom: 0.2em solid #339;
+}
+
+table.docutils th
+{
+	border: none;
+	border-bottom: 0.2em solid #339;
+}
+
+table.docutils td
+{
+	border: none;
+	border-bottom: 0.1em solid #000;
+	padding: 0 1em;
+}
+
 h1.title
 {
 	text-align: center;
@@ -66,9 +88,18 @@ h1.title
 	padding-right: 1em;
 }
 
-.footnote
+table.footnote
 {
+	margin: 1em 0;
+	border: none;
 	margin-top: 2em;
+	width: auto;
+}
+
+table.footnote td
+{
+	border: none;
+	padding: 0;
 }
 
 .footnote + .footnote
