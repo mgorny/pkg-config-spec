@@ -164,26 +164,28 @@ as of version 0.27:
 	Dependant libraries, and required compiler linking flags. These
 	flags are always used when a package is requested directly; they
 	are also used when the package is a requisite for another package
-	and static linking is used.
+	and the library format does not express inter-library dependencies.
 
 	The syntax for `Libs` value is detailed in Libs_.
 
 ``Libs.private``
 	Private dependant libraries. The flags listed there will be appended
-	to the value of `Libs` if static linking is used.
+	to the value of `Libs` if the library format does not express
+	inter-library dependencies.
 
 ``Requires``
 	Public package dependencies. All packages mentioned there will be
 	required for the package check to succeed, and the effective
 	`Cflags` for each of them will be appended to the effective `Cflags`
-	of the current package. Additionally, if static linking is used
-	the same applies to `Libs`.
+	of the current package. Additionally, if the library format does not
+	express inter-library dependencies, the same applies to `Libs`.
 
 	The syntax for `Requires` value is detailed in `Package lists`_.
 
 ``Requires.private``
 	Private package dependencies. The packages mentioned there will be
-	appended to the effective `Requires` list if static linking is used.
+	appended to the effective `Requires` list if the library format
+	does not support inter-library dependencies.
 
 ``Conflicts``
 	The list of conflicting packages. If any of the packages mentioned
@@ -292,7 +294,7 @@ are considered equal. If all version components from one of the strings
 are used while the other has more components, the latter is considered
 newer.
 
-.. [7] Note that the version numbers can be arbitrarily large. For that
+.. [7] Note that the version numbers can be arbitrarily long. For that
        reason, the comparison used in pkg-config uses semi-lexical
        comparison of normalized numeric strings.
 
