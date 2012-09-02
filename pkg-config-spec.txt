@@ -374,8 +374,8 @@ options and an arbitrary number of positional parameters. Those
 parameters are concatenated, forming a requested `package list`_.
 
 
-The exclusive commands
-----------------------
+Exclusive commands
+------------------
 
 The options listed in this section fully influence the operation mode
 of pkg-config. If any of them is specified, pkg-config performs
@@ -399,7 +399,7 @@ are ignored.
 	For each found package (with an unique `package key`_),
 	the following is printed::
 
-		output = package-key *WSP name SP "-" SP description
+		package-key *WSP name SP "-" SP description
 
 	The `name` and `description` fields correspond to the appropriate
 	package keywords. No line wrapping is performed. If multiple
@@ -407,17 +407,6 @@ are ignored.
 	in the earlier `package search`_ directory is used.
 
 	Afterwards, pkg-config exits with `0` status.
-
-``--print-variables``
-	Prints a list of all variables declared in the specified package.
-	The list contains variable names, one per line. If more than one
-	package is specified, the package list is iterated in the reverse
-	order (i.e. variables for the last package come first) and an empty
-	line is used to separate output for the consecutive packages.
-
-	After using this option, pkg-config continues execution. However, if
-	the ``--exists`` option is specified as well, it exits after
-	performing the check appropriate for that option.
 
 ``--exists``
 	Checks silently whether all specified packages (with matching
@@ -429,6 +418,146 @@ are ignored.
 	package (having ``-uninstalled`` suffix in the matching filename),
 	and exit with `0` status if it does. Exits with `1` status
 	otherwise.
+
+
+Line-mode output commands
+-------------------------
+
+The commands listed in this section enable the output of a particular
+information regarding the specified packages. If multiple commands are
+specified, they are executed in the same order as on the following list.
+
+These functions output the information in line mode. Consecutive values
+are printed one per line, and the output is always finished with
+a newline.
+
+``--print-variables``
+	Prints a list of all variables declared in the specified package.
+	The list contains variable names, one per line. If more than one
+	package is specified, the package list is iterated in the reverse
+	order (i.e. variables for the last package come first) and an empty
+	line is used to separate output for the consecutive packages.
+
+``--modversion``
+	Prints the installed version for each of the specified packages.
+	The version string will be followed by a newline.
+
+``--print-provides``
+	For each of the specified packages, prints the following string::
+
+		package-key SP "=" SP package-version LF
+
+``--print-requires``
+	For each of the specified packages, print all the packages required
+	by them, one `package-spec` per line.
+
+``--print-requires-private``
+	For each of the specified packages, print all the packages required
+	by them including the private requirements (i.e. assuming that
+	the library format does not support inter-library dependencies),
+	one `package-spec` per line.
+
+
+Inline output commands
+----------------------
+
+The commands listed in this section enable the output of a particular
+information regarding the specified packages. If multiple commands are
+specified, they are executed in the same order as on the following list.
+
+These functions output the information inline. Consecutive values
+are separated by a single space; a single newline is added after
+the complete output.
+
+``--variable=VARIABLE``
+	For each of the specified packages, print the value of variable
+	`VARIABLE`. If the variable is not declared, nothing is output.
+
+``--cflags-only-I``
+	Output the effective list of Cflags_ from the ``-I`` group for all
+	the requested packages.
+
+``--cflags-only-other``
+	Output the effective list of Cflags_ from the `other flags` group
+	for all the requested packages.
+
+``--cflags``
+	Output the effective list of Cflags_ for all the requested packages.
+
+``--libs-only-l``
+	Output the effective list of Libs_ from the ``-l`` group for all
+	the requested packages.
+
+``--libs-only-L``
+	Output the effective list of Libs_ from the ``-L`` group for all
+	the requested packages.
+
+``--libs-only-other``
+	Output the effective list of Libs_ from the `other flags` group
+	for all the requested packages.
+
+``--libs``
+	Output the effective list of Libs_ for all the requested packages.
+
+
+Other program options
+---------------------
+
+The options in this group affect the behavior of most of the commands.
+
+``--static``
+	Assume that static linking will be used, and thus properties
+	of static libraries should be considered.
+
+``--short-errors``
+	Use shorter error messages.
+
+``--define-variable=NAME=VALUE``
+	Set the variable named `NAME` to a constant value of `VALUE`.
+	Further assignments to the variable within the package files will
+	be ignored, and thus this option can be used to override values of
+	in-package variables.
+
+``--atleast-version=VERSION``
+	Assume that the directly requested packages have to be at least
+	of version `VERSION`. This overrides all version specifiers
+	in the command-line arguments, and replaces them with `>= VERSION`.
+
+``--exact-version=VERSION``
+	Assume that the directly requested packages have to be at exact
+	version `VERSION`. This overrides all version specifiers
+	in the command-line arguments, and replaces them with `= VERSION`.
+
+	If the ``--atleast-version`` option is specified as well, it takes
+	precedence over this one.
+
+``--max-version=VERSION``
+	Assume that the directly requested packages have to be at most
+	of version `VERSION`. This overrides all version specifiers
+	in the command-line arguments, and replaces them with `<= VERSION`.
+
+	If the ``--exact-version`` option is specified as well, it takes
+	precedence over this one.
+
+``--print-errors``
+	Print missing requirement and package conflict errors.
+
+	This option is enabled by default if any of the commands resulting
+	in output is used. It can be disabled using ``--silence-errors``,
+	and in that case ``--silence-errors`` takes precedence over explicit
+	``--print-errors``.
+
+``--silence-errors``
+	Silence missing requirement and package conflict errors.
+
+	This option is enabled by efault if none of the commands resulting
+	in output is used. It can be disabled using ``--print-errors``,
+	and in that case ``--print-errors`` takes precedence over explicit
+	``--silence-errors``.
+
+``--errors-to-stdout``
+	Output the errors (from ``--print-errors``) on the stdout
+	instead of stderr.
 
 
 .. vim:se ft=rst tw=72 noet spell :
