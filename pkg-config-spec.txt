@@ -733,4 +733,79 @@ Win32
 .. XXX: registry?
 
 
+Autoconf macros
+===============
+
+pkg-config installs the following autoconf macros:
+
+``PKG_PROG_PKG_CONFIG([MIN-VERSION])``
+	Checks for the pkg-config executable. If `MIN-VERSION` is specified,
+	the specified pkg-config version is required.
+
+	If the `PKG_CONFIG` variable is set, the check uses its value
+	as requested pkg-config invocation; otherwise, it uses
+	``pkg-config``.
+
+	If the check succeeds, the `PKG_CONFIG` variable is set to a valid
+	invocation and exported for substitution. If the invocation fails
+	or pkg-config is too old, the variable is set to a null value.
+
+	The calls to the two remaining macros expand ``PKG_PROG_PKG_CONFIG``
+	implicitly. However, please note that due to m4 expansion rules, you
+	should either ensure that the first call to either of the two macros
+	is unconditional, or call ``PKG_PROG_PKG_CONFIG`` unconditionally
+	first.
+
+	Aside from `PKG_CONFIG`, this macro should also define
+	`PKG_CONFIG_LIBDIR` and `PKG_CONFIG_PATH` configure variables
+	with the same meaning as the respective `environment variables`_.
+
+``PKG_CHECK_EXISTS(MODULES, [IF-FOUND], [IF-NOT-FOUND])``
+	Check if the specified `MODULES` are available. If the check
+	succeeds, execute `IF-FOUND`. Otherwise, execute `IF-NOT-FOUND`
+	(both default to no-op).
+
+	This macro does not query any specific properties nor print errors.
+
+``PKG_CHECK_MODULES(PREFIX, MODULES, [IF-FOUND], [IF-NOT-FOUND])``
+	Query pkg-config for the specified `MODULES`.
+
+	If `${PREFIX}_CFLAGS` or `${PREFIX}_LIBS` are set, the respective
+	flags are not queried. If both are set, no pkg-config invocation
+	occurs (thus making it possible to build the package without
+	pkg-config installed).
+
+	If all the requested packages are found (or both variables were
+	set), fills in `${PREFIX}_CFLAGS` and `${PREFIX}_LIBS`, then
+	executes `IF-FOUND` (defaults to no-op).
+
+	Otherwise, it either executes `IF-NOT-FOUND` or (if the former is
+	not set) terminates with a verbose error message. The same behavior
+	applies when pkg-config is not available.
+
+	This macro should define `${PREFIX}_CFLAGS` and `${PREFIX}_LIBS`
+	configure variables, allowing the user to override Cflags_
+	and Libs_ respectively.
+
+``PKG_INSTALLDIR([DIRECTORY])``
+	Add a ``--with-pkgconfigdir`` command-line option as a location for
+	arch-dependent package files, and export `pkgconfigdir`
+	for substitution. The variable defaults either to `DIRECTORY` if set
+	or to ``${libdir}/pkgconfig``.
+
+	The directory can be used in automake files like the following::
+
+		pkgconfig_DATA = mylib.pc
+
+``PKG_NOARCH_INSTALLDIR([DIRECTORY])``
+	Add a ``--with-noarch-pkgconfigdir`` command-line option
+	as a location for arch-independent package files, and export
+	`noarch_pkgconfigdir` for substitution. The variable defaults either
+	to `DIRECTORY` if set or to ``${datarootdir}/pkgconfig``.
+
+	The directory can be used in automake files like the following::
+
+		noarch_pkgconfig_DATA = mydata.pc
+
+
 .. vim:se ft=rst tw=72 noet spell :
