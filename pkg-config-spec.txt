@@ -442,9 +442,13 @@ variables`_).
 The default search path is platform-dependant. On POSIX platforms,
 it is defined when building, and it defaults to the ``pkgconfig``
 subdirectories of ``--libdir`` (``lib``) and ``--datarootdir``
-(``share``). On win32, it defaults to the ``lib/pkgconfig``
-and ``share/pkgconfig`` subdirectories of the program directory
-(the directory with pkg-config executable).
+(``share``).
+
+On win32, the default search path is determined at runtime. It is set
+to the ``lib/pkgconfig`` and ``share/pkgconfig`` subdirectories
+of the program installation directory. That directory is determined
+through locating the pkg-config executable, and stripping the ``bin``
+or ``lib`` directory if it is the final directory of the retrieved path.
 
 .. XXX: registry on win32
 
@@ -690,6 +694,36 @@ the behavior of pkg-config as well.
 
 	This variable can be used within pkg-config files to refer
 	to the top build directory. It is not used internally.
+
+
+Platform-specific notes
+=======================
+
+POSIX
+-----
+
+1. The search path separator (for ``PKG_CONFIG_PATH``
+   and ``PKG_CONFIG_LIBDIR``)  is a colon (``:``).
+
+2. The `package key`_ comparison is case-sensitive.
+
+3. The default `package search`_ path is set at build-time, and defaults
+   to the installation prefix subdirectories.
+
+
+Win32
+-----
+
+1. The search path separator (for ``PKG_CONFIG_PATH``
+   and ``PKG_CONFIG_LIBDIR``)  is a semicolon (``;``).
+
+2. The `package key`_ comparison is case-insensitive (following
+   the filename comparison rules for the platform).
+
+3. The default `package search`_ path is determined at runtime using
+   the actual program installation directory.
+
+.. XXX: registry?
 
 
 .. vim:se ft=rst tw=72 noet spell :
