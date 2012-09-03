@@ -263,9 +263,7 @@ groups:
 1. the ``-I`` (include path) flags,
 2. other flags.
 
-Please note that if ``pc_sysrootdir`` variable is defined (see:
-`Environment variables`_), its value will be prepended to the include
-paths (in ``-I`` flags).
+Additionally, pkg-config applies `flag mangling rules`_ to the flags.
 
 
 Libs
@@ -285,10 +283,24 @@ groups:
 
 Please note that if ``pc_sysrootdir`` variable is defined (see:
 `Environment variables`_), its value will be prepended to the library
-paths (in ``-L`` flags)..
+paths (in ``-L`` flags).
+
+Additionally, pkg-config applies `flag mangling rules`_ to the flags.
 
 .. [3] pkg-config additionally ensures not to put C# ``-lib:`` to that
        group.
+
+
+Flag mangling rules
+-------------------
+
+The following mangling is applied to the Cflags_ and Libs_:
+
+1. If ``pc_sysrootdir`` variable is set (see: `Special variables`_), its
+   value is prepended to the paths in the variables accepting paths.
+2. Unless ``PKG_CONFIG_ALLOW_SYSTEM_*`` `environment variables`_
+   are set, the variables pointing to the system include/library
+   directories are removed.
 
 
 Package list
@@ -674,8 +686,6 @@ the behavior of pkg-config as well.
 
 ``PKG_CONFIG_ALLOW_SYSTEM_LIBS``
 	Disable stripping of standard library directories from `Libs`_.
-
-.. XXX: ^ describe how pkg-config strips them
 
 ``PKG_CONFIG_SYSROOT_DIR``
 	The value for global ``pc_sysrootdir`` variable. If unset,
