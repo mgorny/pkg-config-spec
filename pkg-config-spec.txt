@@ -5,6 +5,10 @@ pkg-config specification
 :Copyright: http://creativecommons.org/licenses/by/3.0/
 
 
+.. contents:: Table of contents
+   :backlinks: top
+   :depth: 2
+
 Introduction
 ============
 

@@ -19,10 +19,16 @@ p, li, dd, td
 	line-height: 1.5;
 }
 
+ul, ol
+{
+	padding-left: 1.5em;
+}
+
 dt
 {
 	font-weight: bold;
 	margin-top: 1em;
+	margin-bottom: .3em;
 }
 
 dd p, .footnote p
@@ -30,14 +36,21 @@ dd p, .footnote p
 	margin-top: 0;
 }
 
-h1
+h1, h2, h3
 {
 	/* move bottom border onto the baseline */
 	height: 1em;
 
 	margin-top: 1.5em;
 	margin-bottom: .9em;
-	border-bottom: .05em solid #bbb;
+	border-bottom: .08em solid #bbb;
+
+	color: #44b;
+}
+
+h1 a, h2 a, h3 a
+{
+	color: #44b;
 }
 
 h2
@@ -118,4 +131,24 @@ pre.literal-block
 
 	border-left: 2em solid #ddf;
 	background: #eef;
+}
+
+.contents
+{
+	float: right;
+	margin: 0 0 .5em 1em;
+	padding: 0 1em;
+
+	background: #f7f7ff;
+	border: .1em solid #aaf;
+}
+
+.contents ul
+{
+	list-style: decimal;
+}
+
+.contents p
+{
+	border-bottom: .1em solid #aaf;
 }
