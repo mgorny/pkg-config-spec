@@ -46,10 +46,10 @@ pkg-config implementation.
 .. _pkg-config: http://www.freedesktop.org/wiki/Software/pkg-config
 .. _glib: http://developer.gnome.org/glib/
 .. _popt: http://rpm5.org/files/popt/
-.. _`OpenBSD implementation`:
+.. _OpenBSD implementation:
 	http://www.openbsd.org/cgi-bin/cvsweb/src/usr.bin/pkg-config/
 .. _pkgconf: https://github.com/pkgconf/pkgconf
-.. _`man page`: http://linux.die.net/man/1/pkg-config
+.. _man page: http://linux.die.net/man/1/pkg-config
 .. _Guide: http://people.freedesktop.org/~dbn/pkg-config-guide.html
 
 
