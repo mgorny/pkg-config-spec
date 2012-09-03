@@ -454,6 +454,9 @@ the ``pkg-config`` executable. The executable accepts GNU-style long
 options and an arbitrary number of positional parameters. Those
 parameters are concatenated, forming a requested `package list`_.
 
+The list specified here is closely based on the actual pkg-config
+and pkgconf behavior, and its use in various packages.
+
 
 Exclusive commands
 ------------------
@@ -461,8 +464,7 @@ Exclusive commands
 The options listed in this section fully influence the operation mode
 of pkg-config. If any of them is specified, pkg-config performs
 the appropriate operation and exits. If more than one is specified,
-the one coming earlier in this list is respected and the other options
-are ignored.
+the behavior is implementation-defined.
 
 ``--version``
 	Outputs the pkg-config version and exits with `0` status.
@@ -506,37 +508,35 @@ Line-mode output commands
 
 The commands listed in this section enable the output of a particular
 information regarding the specified packages. If multiple commands are
-specified, they are executed in the same order as on the following list.
+specified, the behavior is implementation-defined.
 
 These functions output the information in line mode. Consecutive values
 are printed one per line, and the output is always finished with
-a newline.
+a newline. If multiple packages are requested, the output format is
+implementation-defined.
+
+The program exits with `0` status if all packages were found, with
+`1` otherwise.
 
 ``--print-variables``
 	Prints a list of all variables declared in the specified package.
-	The list contains variable names, one per line. If more than one
-	package is specified, the package list is iterated in the reverse
-	order (i.e. variables for the last package come first) and an empty
-	line is used to separate output for the consecutive packages.
+	The list contains variable names, one per line.
 
 ``--modversion``
 	Prints the installed version for each of the specified packages.
-	The version string will be followed by a newline.
 
 ``--print-provides``
 	For each of the specified packages, prints the following string::
 
-		package-key SP "=" SP package-version LF
+		package-key SP "=" SP package-version
 
 ``--print-requires``
-	For each of the specified packages, print all the packages required
-	by them, one `package-spec` per line.
+	For each of the specified packages, print all the packages
+	in `Requires`, one `package-spec` per line.
 
 ``--print-requires-private``
-	For each of the specified packages, print all the packages required
-	by them including the private requirements (i.e. assuming that
-	the library format does not support inter-library dependencies),
-	one `package-spec` per line.
+	For each of the specified packages, print all the packages
+	in `Requires.private`, one `package-spec` per line.
 
 
 Inline output commands
@@ -544,11 +544,15 @@ Inline output commands
 
 The commands listed in this section enable the output of a particular
 information regarding the specified packages. If multiple commands are
-specified, they are executed in the same order as on the following list.
+specified, the behavior is implementation-defined. However, it is
+guaranteed that ``--cflags --libs`` will output both.
 
 These functions output the information inline. Consecutive values
 are separated by a single space; a single newline is added after
 the complete output.
+
+The program exits with `0` status if all packages were found, with
+`1` otherwise.
 
 ``--variable=VARIABLE``
 	For each of the specified packages, print the value of variable
