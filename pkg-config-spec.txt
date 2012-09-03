@@ -160,8 +160,6 @@ variables`_).
 	The value of this variable may be used by package files to refer to
 	the top build directory of the current project.
 
-.. XXX: prefix on win32
-
 
 Keywords
 --------
@@ -455,8 +453,6 @@ of the program installation directory. That directory is determined
 through locating the pkg-config executable, and stripping the ``bin``
 or ``lib`` directory if it is the final directory of the retrieved path.
 
-.. XXX: registry on win32
-
 
 Command-line interface
 ======================
@@ -730,8 +726,6 @@ Win32
 3. The default `package search`_ path is determined at runtime using
    the actual program installation directory.
 
-.. XXX: registry?
-
 
 Autoconf macros
 ===============
@@ -806,6 +800,23 @@ pkg-config installs the following autoconf macros:
 	The directory can be used in automake files like the following::
 
 		noarch_pkgconfig_DATA = mydata.pc
+
+
+Missing information
+===================
+
+This specification is still incomplete, and there are a few features
+which probably should be described in the future.
+
+1. Redundant (repeating) Cflags_ and Libs_ removal. The implementation
+   of that feature is known to be buggy (`bug #16101`_ and duplicates),
+   and it is not strictly required by applications using pkg-config.
+2. Win32-specific `${prefix}` mangling.
+3. Win32-specific command-line options.
+4. Package search path retrieval from Win32 registry. The feature is
+   documented, however I don't see any implementation code for it.
+
+.. _bug #16101: https://bugs.freedesktop.org/show_bug.cgi?id=16101
 
 
 .. vim:se ft=rst tw=72 noet spell :
