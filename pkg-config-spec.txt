@@ -111,7 +111,7 @@ Each interpreted data line follows the following format::
 The `variable` syntax defines a variable with a name defined by `tag`.
 The variable definition becomes effective (i.e. can be referenced)
 starting with the following line. If a variable is declared multiple
-times, the next declaration replaces the previous value [3]_
+times, the next declaration replaces the previous value [2]_
 and a warning is printed.
 
 The `keyword` syntax defines a keyword with a name defined by `tag`.
@@ -133,7 +133,7 @@ Please note that aside to the package-defined variables, additional
 ``--define-variable``, see: `Other program options`_) or by pkg-config
 itself (see: `Special variables`_).
 
-.. [3] Note that the new value is effective starting with the next line,
+.. [2] Note that the new value is effective starting with the next line,
        thus the old value will still be used for previous lines
        and the variable declaration itself.
 
@@ -261,15 +261,11 @@ The flags encountered in `Cflags` are grouped into the two following
 groups:
 
 1. the ``-I`` (include path) flags,
-2. other flags [4]_.
+2. other flags.
 
 Please note that if ``pc_sysrootdir`` variable is defined (see:
 `Environment variables`_), its value will be prepended to the include
 paths (in ``-I`` flags).
-
-.. [4] pkg-config additionally concatenates the ``-idirafter``
-       option with its argument to ensure that multiple occurences
-       of it aren't collapsed.
 
 
 Libs
@@ -283,19 +279,16 @@ into consecutive command-line arguments.
 The flags encountered in `Libs` are grouped into the three following
 groups:
 
-1. the ``-l`` (library name) flags [5]_,
+1. the ``-l`` (library name) flags [3]_,
 2. the ``-L`` (library path) flags,
-3. other flags [6]_.
+3. other flags.
 
 Please note that if ``pc_sysrootdir`` variable is defined (see:
 `Environment variables`_), its value will be prepended to the library
 paths (in ``-L`` flags)..
 
-.. [5] pkg-config additionally ensures not to put C# ``-lib:`` to that
+.. [3] pkg-config additionally ensures not to put C# ``-lib:`` to that
        group.
-.. [6] pkg-config additionally concatenates the MacOS X ``-framework``
-       option with its argument to ensure that multiple occurences
-       of ``-framework`` aren't collapsed.
 
 
 Package list
@@ -340,7 +333,7 @@ the following algorithm is repeated until either one of the segments is
 indicated newer or the end of either version string is reached:
 
 1. If both compared segments are numeric, the segment with larger
-   integer value is considered newer [7]_.
+   integer value is considered newer [4]_.
 2. If both compared segments are alphabetic, a semi-lexical (ASCII
    code) comparison is applied (using ``strcmp()``).
 3. If the compared segments are of different type (one numeric
@@ -353,7 +346,7 @@ are considered equal. If all version components from one of the strings
 are used while the other has more components, the latter is considered
 newer.
 
-.. [7] Note that the version numbers can be arbitrarily long. For that
+.. [4] Note that the version numbers can be arbitrarily long. For that
        reason, the comparison used in pkg-config uses semi-lexical
        comparison of normalized numeric strings.
 
@@ -409,10 +402,10 @@ algorithm is used to find the requested package:
    succeeds, the package found is returned.
 4. If the `package-key` is ``pkg-config``, a virtual package
    for pkg-config is returned. The package specifies at least
-   a `Version` keyword matching a pkg-config version [8]_,
+   a `Version` keyword matching a pkg-config version [5]_,
    and a `pc_path` variable expressing the default package search paths.
 
-.. [8] Please note that a particular consumer may require a specific
+.. [5] Please note that a particular consumer may require a specific
        pkg-config version. For that reason, it is recommended to use
        version numbers matching upstream versions; an implementation
        following this specification should use the version ``0.27``.
